@@ -1,8 +1,8 @@
 package sokochan;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -18,14 +18,15 @@ public class MapLoader {
     private final List<Level> levels;
     private String name;
 
-    public MapLoader(String file) throws IOException {
-        levels = new ArrayList<>();
 
-        Path file1 = FileSystems.getDefault().getPath(file);
+    public MapLoader() throws IOException {
+        levels = new ArrayList<>();
+    }
+
+    void loadMap(File file) throws IOException {
+        Path file1 = file.toPath();
 
         Stream<String> lines = Files.lines(file1);
-
-        int line = 0;
 
         Iterator i = lines.iterator();
         while (i.hasNext()) {
@@ -42,12 +43,7 @@ public class MapLoader {
                 if (lastIndex > -1)
                     levels.get(lastIndex).content.add(s);
             }
-            line++;
         }
-    }
-
-    public static void main(String args[]) throws IOException {
-        new MapLoader("C:\\Users\\Vittorio\\Projects\\JavaProjects\\Sokochan\\src\\sokochan\\GridObjects/SampleGame.skb");
     }
 
     List<Level> getLevels() {

@@ -43,7 +43,9 @@ public final class SokochanEngine {
     }
 
     private boolean loadGame(File file, int levelIndex) throws IOException {
-        MapLoader loader = new MapLoader(file.getAbsolutePath());
+        MapLoader loader = new MapLoader();
+
+        loader.loadMap(file);
 
         levels = loader.getLevels();
         mapName = loader.getName();
