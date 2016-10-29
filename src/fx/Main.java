@@ -119,6 +119,13 @@ public class Main extends Application {
         bindEvents();
     }
 
+    private void initGame() {
+        engine = new SokochanEngine();
+
+        draw();
+        bindEvents();
+    }
+
     private void draw() {
         if (engine == null)
             return;

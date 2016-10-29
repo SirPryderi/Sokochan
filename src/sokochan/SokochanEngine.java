@@ -30,8 +30,12 @@ public final class SokochanEngine {
     private HistoryStack historyStack;
     private String mapName;
 
-    public SokochanEngine() throws IOException {
-        loadGame(new File("C:\\Users\\Vittorio\\Projects\\JavaProjects\\Sokochan\\src\\fx\\SampleGame.skb"));
+    public SokochanEngine() {
+        try {
+            loadGame(new File(getClass().getResource("/maps/SampleGame.skb").toURI()));
+        } catch (Exception e) {
+            throw new Error("Missing core file");
+        }
     }
 
     public SokochanEngine(File file) throws IOException {

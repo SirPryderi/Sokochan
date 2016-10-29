@@ -5,7 +5,6 @@ import sokochan.GridObjects.*;
 import sokochan.SokochanEngine;
 import sokochan.SokochanGrid;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -16,14 +15,7 @@ import java.util.Scanner;
 class Main {
 
     public static void main(String args[]) {
-        SokochanEngine engine = null;
-        try {
-            engine = new SokochanEngine();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            System.err.println("Provided game file does not exist. Exiting now...");
-            System.exit(0);
-        }
+        SokochanEngine engine = new SokochanEngine();
 
         printGrid(engine.getSokochanGrid());
 
