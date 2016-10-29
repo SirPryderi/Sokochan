@@ -129,7 +129,7 @@ public class Main extends Application {
         bindEvents();
     }
 
-    private void initGame() {
+    public void initGame() {
         engine = new SokochanEngine();
 
         draw();
