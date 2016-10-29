@@ -54,23 +54,27 @@ public final class SokochanEngine {
         levels = loader.getLevels();
         mapName = loader.getName();
 
-        loadLevel(levelIndex);
+        if (loader.getInProgressLevel() != null) {
+            this.levelIndex = loader.getInProgressLevelIndex();
+            loadLevel(loader.getInProgressLevel());
+        } else {
+            loadLevel(levelIndex);
+        }
 
         return true;
     }
 
     public void loadLevel(int levelIndex) {
         this.levelIndex = levelIndex;
-        this.movesCount = 0;
-        this.historyStack = new HistoryStack();
 
-        MapLoader.Level level;
-        try {
-            level = levels.get(levelIndex);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
+        // TODO Inspect possible Out of Bound error
+        loadLevel(levels.get(levelIndex));
+    }
+
+    private void loadLevel(MapLoader.Level level) {
+        this.movesCount = 0;
+        this.pushesCount = 0;
+        this.historyStack = new HistoryStack();
 
         sokochanGrid = new SokochanGrid(level.getX(), level.getY());
 
@@ -97,6 +101,13 @@ public final class SokochanEngine {
                 case 'd':
                     new Diamond(sokochanGrid, i.getPosition());
                     break;
+                case 'p': // Crate on  Diamond
+                    new Diamond(sokochanGrid, i.getPosition());
+                    crates.add(new Crate(sokochanGrid, i.getPosition()));
+                    break;
+                case 'r': // WarehouseKeeper on Diamond
+                    new Diamond(sokochanGrid, i.getPosition());
+                    warehouseKeeper = new WarehouseKeeper(sokochanGrid, i.getPosition());
             }
 
         }
@@ -104,8 +115,10 @@ public final class SokochanEngine {
         this.crates = Arrays.copyOf(crates.toArray(), crates.size(), Crate[].class);
     }
 
-    public boolean saveGame(File file) {
-        return false;
+    public void saveGame(File file) throws IOException {
+        MapLoader loader = new MapLoader();
+
+        loader.saveMap(file, this);
     }
 
     public boolean movePlayer(Direction direction) {
@@ -194,6 +207,10 @@ public final class SokochanEngine {
 
     public String getMapName() {
         return mapName;
+    }
+
+    public List<MapLoader.Level> getLevels() {
+        return levels;
     }
     //</editor-fold>
 

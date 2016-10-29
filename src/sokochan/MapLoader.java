@@ -1,5 +1,7 @@
 package sokochan;
 
+import sokochan.GridObjects.*;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -17,35 +19,112 @@ import java.util.stream.Stream;
 public class MapLoader {
     private final List<Level> levels;
     private String name;
+    private Level inProgressLevel;
+    private int inProgressLevelIndex;
 
-
-    public MapLoader() throws IOException {
+    public MapLoader() {
         levels = new ArrayList<>();
     }
 
-    void loadMap(File file) throws IOException {
+    void loadMap(File file) throws IOException, MapLoaderException {
         Path file1 = file.toPath();
 
         Stream<String> lines = Files.lines(file1);
 
         Iterator i = lines.iterator();
+
+        boolean isInProgressLevel = false;
+
         while (i.hasNext()) {
             String s = (String) i.next();
 
             if (s.contains("MapSetName: ")) {
                 setName(s.replace("MapSetName: ", ""));
             } else if (s.contains("LevelName: ")) {
-
                 String name = s.replace("LevelName: ", "");
                 levels.add(new Level(name));
+            } else if (s.contains("CurrentLevel: ")) {
+                try {
+                    inProgressLevelIndex = Integer.valueOf(s.replace("CurrentLevel: ", ""));
+                    isInProgressLevel = true;
+                    inProgressLevel = new Level(levels.get(inProgressLevelIndex).getName());
+                } catch (NumberFormatException e) {
+                    throw new MapLoaderException("Invalid in progress index provided");
+                }
             } else if (!s.isEmpty()) {
-                int lastIndex = levels.size() - 1;
-                if (lastIndex > -1)
-                    levels.get(lastIndex).content.add(s);
+                Level level;
+
+                if (isInProgressLevel) {
+                    level = inProgressLevel;
+                } else {
+                    int lastIndex = levels.size() - 1;
+                    if (lastIndex > -1)
+                        level = levels.get(lastIndex);
+                    else {
+                        level = null;
+                    }
+                }
+
+                if (level != null)
+                    level.content.add(s);
             }
         }
     }
 
+    void saveMap(File file, SokochanEngine engine) throws IOException {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("MapSetName: ");
+        builder.append(engine.getMapName());
+        builder.append("\n");
+
+        for (Level level : engine.getLevels()) {
+            builder.append("LevelName: ");
+            builder.append(level.getName());
+            builder.append("\n");
+            level.getContent().forEach(s -> {
+                builder.append(s);
+                builder.append("\n");
+            });
+            builder.append("\n");
+        }
+        // The normal level has been saved now
+
+        // Now append the progress of the current level
+        builder.append("CurrentLevel: ");
+        builder.append(engine.getLevelIndex());
+        builder.append("\n");
+
+        engine.getSokochanGrid().forEach(tileGridObject -> {
+            MovableGridObject content = tileGridObject.getPlacedObject();
+
+            if (tileGridObject instanceof Wall)
+                builder.append('w');
+            else if (tileGridObject instanceof Diamond) {
+                if (content == null)
+                    builder.append('d');
+                else if (content instanceof Crate)
+                    builder.append('p');
+                else if (content instanceof WarehouseKeeper)
+                    builder.append('r');
+            } else {
+                if (content == null)
+                    builder.append(' ');
+                else if (content instanceof Crate)
+                    builder.append('c');
+                else if (content instanceof WarehouseKeeper)
+                    builder.append('s');
+            }
+
+            // If it's the last in the row, send a carriage return
+            if (tileGridObject.getPosition().getX() == engine.getSokochanGrid().X_SIZE - 1)
+                builder.append('\n');
+        });
+
+        Files.write(file.toPath(), builder.toString().getBytes());
+    }
+
+    //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
     List<Level> getLevels() {
         return levels;
     }
@@ -58,9 +137,18 @@ public class MapLoader {
         this.name = name;
     }
 
+    public Level getInProgressLevel() {
+        return inProgressLevel;
+    }
+
+    public int getInProgressLevelIndex() {
+        return inProgressLevelIndex;
+    }
+
     public int getNumberOfLevels() {
         return levels.size();
     }
+    //</editor-fold>
 
     public class Level implements Iterable {
         private final String name;
@@ -128,4 +216,9 @@ public class MapLoader {
         }
     }
 
+    public class MapLoaderException extends RuntimeException {
+        public MapLoaderException(String message) {
+            super(message);
+        }
+    }
 }

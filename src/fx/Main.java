@@ -112,8 +112,16 @@ public class Main extends Application {
         } finally {
             File file = fileChooser.showSaveDialog(primaryStage);
 
-            if (file != null)
-                engine.saveGame(file);
+            if (file != null) {
+                try {
+                    engine.saveGame(file);
+                } catch (IOException e) {
+                    // TODO Alert
+                    showExceptionDialog(e);
+                } catch (Exception e) {
+                    showExceptionDialog(e);
+                }
+            }
         }
     }
 
@@ -123,6 +131,13 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Unable to load file");
+            // TODO error message
+            return;
+        } catch (IndexOutOfBoundsException e) {
+            // TODO better error
+            return;
+        } catch (Exception e) {
+            showExceptionDialog(e);
             return;
         }
         draw();
@@ -207,7 +222,6 @@ public class Main extends Application {
                     alert.setContentText("You completed the game in " + engine.getMovesCount() + " moves!\nPress okay to load the next level.");
 
                     alert.showAndWait();
-
 
                     engine.loadLevel(engine.getLevelIndex() + 1);
                     draw();
@@ -311,6 +325,8 @@ public class Main extends Application {
     @SuppressWarnings("unused")
     private void showExceptionDialog(Exception ex) {
         // credit: http://code.makery.ch/blog/javafx-dialogs-official/
+
+        ex.printStackTrace();
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception Dialog");

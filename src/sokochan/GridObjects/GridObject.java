@@ -22,7 +22,7 @@ public abstract class GridObject{
 
     protected abstract void place();
 
-    Point getPosition() {
+    public Point getPosition() {
         return position;
     }
 
