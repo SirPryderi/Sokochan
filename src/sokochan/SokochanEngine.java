@@ -42,11 +42,11 @@ public final class SokochanEngine {
         loadGame(file);
     }
 
-    private boolean loadGame(File file) throws IOException {
-        return loadGame(file, 0);
+    private void loadGame(File file) throws IOException {
+        loadGame(file, 0);
     }
 
-    private boolean loadGame(File file, int levelIndex) throws IOException {
+    private void loadGame(File file, int levelIndex) throws IOException {
         MapLoader loader = new MapLoader();
 
         loader.loadMap(file);
@@ -60,8 +60,6 @@ public final class SokochanEngine {
         } else {
             loadLevel(levelIndex);
         }
-
-        return true;
     }
 
     public void loadLevel(int levelIndex) {
@@ -209,7 +207,7 @@ public final class SokochanEngine {
         return mapName;
     }
 
-    public List<MapLoader.Level> getLevels() {
+    List<MapLoader.Level> getLevels() {
         return levels;
     }
     //</editor-fold>
