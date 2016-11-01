@@ -24,7 +24,7 @@ public class WarehouseKeeper extends MovableGridObject {
     }
 
     public Crate getCrateInDirection(Direction direction) {
-        MovableGridObject object = getGrid().getGridObject(getDisplacement(direction));
+        MovableGridObject object = getNeighbour(direction);
 
         // If is a Crate, return it, otherwise return null
         return object instanceof Crate ? (Crate) object : null;

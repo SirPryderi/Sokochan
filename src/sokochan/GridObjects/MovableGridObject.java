@@ -35,7 +35,7 @@ public abstract class MovableGridObject extends GridObject {
         getGrid().setGridObject(getPosition(), null);
     }
 
-    Point getDisplacement(Direction direction) {
+    private Point getDisplacement(Direction direction) {
         Point position = new Point(getPosition().x, getPosition().y);
 
         Point translation = new Point(0, 0);
@@ -61,8 +61,30 @@ public abstract class MovableGridObject extends GridObject {
     }
 
     private boolean canMove(Direction direction) {
-        Point position = getDisplacement(direction);
-        return this.getGrid().isTileWalkable(position);
+        try {
+            return getNeighbourTile(direction).isWalkable();
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
+
+    MovableGridObject getNeighbour(Direction direction) {
+        return getGrid().getGridObject(getDisplacement(direction));
+    }
+
+    TileGridObject getNeighbourTile(Direction direction) {
+        return getGrid().getTile(getDisplacement(direction));
+    }
+
+    public TileGridObject[] getNeighbourTiles() {
+        TileGridObject[] neighbours = new TileGridObject[4];
+
+        int i = 0;
+        for (Direction d : Direction.values()) {
+            neighbours[i] = getNeighbourTile(d);
+        }
+
+        return neighbours;
     }
 
     @Override
