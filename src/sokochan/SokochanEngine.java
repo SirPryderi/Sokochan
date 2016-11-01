@@ -178,6 +178,7 @@ public final class SokochanEngine {
 
             assert crate != null;
             crate.move(pop.direction.getOppositeDirection());
+            pushesCount--;
         } else {
             warehouseKeeper.move(pop.direction.getOppositeDirection());
         }
