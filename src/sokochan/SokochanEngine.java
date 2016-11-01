@@ -223,7 +223,7 @@ public final class SokochanEngine {
     }
 
     private class HistoryStack extends Stack<HistoryElement> {
-        final int MAX_SIZE = 16;
+        final int MAX_SIZE = 64;
 
         @Override
         public HistoryElement push(HistoryElement item) {
