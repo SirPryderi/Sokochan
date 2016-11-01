@@ -7,8 +7,6 @@ import sokochan.GridObjects.WarehouseKeeper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -22,7 +20,9 @@ import java.util.Stack;
 public final class SokochanEngine {
     private SokochanGrid sokochanGrid;
     private WarehouseKeeper warehouseKeeper;
-    private Crate[] crates;
+    private int cratesCount;
+    private int cratesInCornerCount;
+    private int cratesOnDiamondCount;
     private int movesCount;
     private int pushesCount;
     private List<MapLoader.Level> levels;
@@ -41,7 +41,6 @@ public final class SokochanEngine {
         loadGame(loader);
     }
 
-
     /**
      * Loads a user defined map file
      *
@@ -55,6 +54,14 @@ public final class SokochanEngine {
         loader.loadMap(file);
 
         loadGame(loader);
+    }
+
+    public int getCratesInCornerCount() {
+        return cratesInCornerCount;
+    }
+
+    public int getCratesOnDiamondCount() {
+        return cratesOnDiamondCount;
     }
 
     private void loadGame(MapLoader loader) {
@@ -79,13 +86,14 @@ public final class SokochanEngine {
     private void loadLevel(MapLoader.Level level) {
         this.movesCount = 0;
         this.pushesCount = 0;
+        this.cratesCount = 0;
+        this.cratesInCornerCount = 0;
+        this.cratesOnDiamondCount = 0;
         this.historyStack = new HistoryStack();
 
         sokochanGrid = new SokochanGrid(level.getX(), level.getY());
 
         sokochanGrid.populateWithTiles();
-
-        List<Crate> crates = new ArrayList<>();
 
         MapLoader.Level.MapIterator i = level.iterator();
 
@@ -98,7 +106,9 @@ public final class SokochanEngine {
                     new Wall(sokochanGrid, i.getPosition());
                     break;
                 case 'c':
-                    crates.add(new Crate(sokochanGrid, i.getPosition()));
+                    if (new Crate(sokochanGrid, i.getPosition()).isOnDiamond())
+                        cratesOnDiamondCount++;
+                    cratesCount++;
                     break;
                 case 's':
                     warehouseKeeper = new WarehouseKeeper(sokochanGrid, i.getPosition());
@@ -108,7 +118,9 @@ public final class SokochanEngine {
                     break;
                 case 'p': // Crate on  Diamond
                     new Diamond(sokochanGrid, i.getPosition());
-                    crates.add(new Crate(sokochanGrid, i.getPosition()));
+                    if (new Crate(sokochanGrid, i.getPosition()).isOnDiamond())
+                        cratesOnDiamondCount++;
+                    cratesCount++;
                     break;
                 case 'r': // WarehouseKeeper on Diamond
                     new Diamond(sokochanGrid, i.getPosition());
@@ -116,8 +128,6 @@ public final class SokochanEngine {
             }
 
         }
-
-        this.crates = Arrays.copyOf(crates.toArray(), crates.size(), Crate[].class);
     }
 
     public void saveGame(File file) throws IOException {
@@ -132,16 +142,19 @@ public final class SokochanEngine {
 
         int status = warehouseKeeper.movePushing(direction);
 
-        switch (status) {
-            case 1:
-                pushed = true;
-                moved = true;
-                pushesCount++;
-                break;
-            case 0:
-                pushed = false;
-                moved = true;
-                break;
+        if (status >= 1) {
+            pushed = true;
+            moved = true;
+            pushesCount++;
+            if (status == 2) {
+                cratesOnDiamondCount++;
+            } else if (status == 3) {
+                cratesOnDiamondCount--;
+            }
+        } else if (status == 0) {
+            pushed = false;
+            moved = true;
+
         }
 
         if (moved) {
@@ -178,12 +191,7 @@ public final class SokochanEngine {
     }
 
     public boolean isComplete() {
-        for (Crate crate : crates) {
-            if (!crate.isOnDiamond())
-                return false;
-        }
-
-        return true;
+        return cratesOnDiamondCount == cratesCount;
     }
 
     public int getMovesCount() {
@@ -207,7 +215,7 @@ public final class SokochanEngine {
     }
 
     public int getCratesCount() {
-        return crates.length;
+        return cratesCount;
     }
 
     public String getMapName() {

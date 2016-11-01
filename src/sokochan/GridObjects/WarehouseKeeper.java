@@ -33,22 +33,34 @@ public class WarehouseKeeper extends MovableGridObject {
     /**
      * A custom method for moving the {@link WarehouseKeeper}
      *
-     * @param direction where moving
-     * @return -1 if failed, 0 if moved, 1 if moved and pushed
+     * @param direction where moving the {@link WarehouseKeeper} to
+     * @return <ul>
+     * <li>-1 if failed</li>
+     * <li>0 if moved</li>
+     * <li>1 if moved and pushed</li>
+     * <li>2 if moved and pushed and a crate is now on diamond</li>
+     * <li>3 if moved and pushed and a crate is no longer on diamond</li>
+     * </ul>
      */
     public int movePushing(Direction direction) {
         Crate crate = getCrateInDirection(direction);
         boolean pushed = false;
 
+        int pushed_status = 1;
+
         if (crate != null) {
+            boolean wasOnDiamond = crate.isOnDiamond();
             pushed = push(crate, direction);
 
             if (!pushed)
                 return -1;
+
+            // If the crate has changed the onDiamond status
+            if (wasOnDiamond != crate.isOnDiamond()) pushed_status = wasOnDiamond ? 3 : 2;
         }
 
         if (move(direction)) {
-            return pushed ? 1 : 0;
+            return pushed ? pushed_status : 0;
         }
 
         return -1;
