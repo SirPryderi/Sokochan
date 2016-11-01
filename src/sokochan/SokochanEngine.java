@@ -30,27 +30,34 @@ public final class SokochanEngine {
     private HistoryStack historyStack;
     private String mapName;
 
+    /**
+     * Loads the default map
+     */
     public SokochanEngine() {
-        try {
-            loadGame(new File(getClass().getResource("/maps/SampleGame.skb").toURI()));
-        } catch (Exception e) {
-            throw new Error("Missing core file");
-        }
+        MapLoader loader = new MapLoader();
+
+        loader.loadMap();
+
+        loadGame(loader);
     }
 
+
+    /**
+     * Loads a user defined map file
+     *
+     * @param file the .skb file containing the map
+     * @throws IOException                           in case the file is not reachable
+     * @throws sokochan.MapLoader.MapLoaderException in case it is not a valid map
+     */
     public SokochanEngine(File file) throws IOException {
-        loadGame(file);
-    }
-
-    private void loadGame(File file) throws IOException {
-        loadGame(file, 0);
-    }
-
-    private void loadGame(File file, int levelIndex) throws IOException {
         MapLoader loader = new MapLoader();
 
         loader.loadMap(file);
 
+        loadGame(loader);
+    }
+
+    private void loadGame(MapLoader loader)  {
         levels = loader.getLevels();
         mapName = loader.getName();
 
@@ -58,7 +65,7 @@ public final class SokochanEngine {
             this.levelIndex = loader.getInProgressLevelIndex();
             loadLevel(loader.getInProgressLevel());
         } else {
-            loadLevel(levelIndex);
+            loadLevel(0);
         }
     }
 

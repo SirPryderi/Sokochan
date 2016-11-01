@@ -3,8 +3,7 @@ package sokochan;
 import sokochan.GridObjects.*;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -26,17 +25,31 @@ public class MapLoader {
         levels = new ArrayList<>();
     }
 
+    void loadMap() throws MapLoaderException, NullPointerException {
+        InputStream systemResourceAsStream = ClassLoader.getSystemResourceAsStream("maps/SampleGame.skb");
+
+        Reader targetReader = new InputStreamReader(systemResourceAsStream);
+
+        BufferedReader reader = new BufferedReader(targetReader);
+
+        loadMap(reader.lines());
+    }
+
     void loadMap(File file) throws IOException, MapLoaderException {
         Path file1 = file.toPath();
 
         Stream<String> lines = Files.lines(file1);
 
-        Iterator i = lines.iterator();
+        loadMap(lines);
+    }
+
+    private void loadMap(Stream<String> lines) throws MapLoaderException {
+        Iterator<String> i = lines.iterator();
 
         boolean isInProgressLevel = false;
 
         while (i.hasNext()) {
-            String s = (String) i.next();
+            String s = i.next();
 
             if (s.contains("MapSetName: ")) {
                 setName(s.replace("MapSetName: ", ""));
@@ -137,11 +150,11 @@ public class MapLoader {
         this.name = name;
     }
 
-    public Level getInProgressLevel() {
+    Level getInProgressLevel() {
         return inProgressLevel;
     }
 
-    public int getInProgressLevelIndex() {
+    int getInProgressLevelIndex() {
         return inProgressLevelIndex;
     }
 

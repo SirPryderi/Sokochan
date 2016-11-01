@@ -145,10 +145,14 @@ public class Main extends Application {
     }
 
     public void initGame() {
-        engine = new SokochanEngine();
+        try {
+            engine = new SokochanEngine();
 
-        draw();
-        bindEvents();
+            draw();
+            bindEvents();
+        } catch (Exception e) {
+            showExceptionDialog(e);
+        }
     }
 
     private void draw() {
