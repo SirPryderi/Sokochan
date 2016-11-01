@@ -72,16 +72,18 @@ public abstract class MovableGridObject extends GridObject {
         return getGrid().getGridObject(getDisplacement(direction));
     }
 
+    @SuppressWarnings("WeakerAccess")
     TileGridObject getNeighbourTile(Direction direction) {
         return getGrid().getTile(getDisplacement(direction));
     }
 
-    public TileGridObject[] getNeighbourTiles() {
+    TileGridObject[] getNeighbourTiles() {
         TileGridObject[] neighbours = new TileGridObject[4];
 
         int i = 0;
         for (Direction d : Direction.values()) {
             neighbours[i] = getNeighbourTile(d);
+            i++;
         }
 
         return neighbours;

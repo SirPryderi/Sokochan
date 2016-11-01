@@ -57,7 +57,7 @@ public final class SokochanEngine {
         loadGame(loader);
     }
 
-    private void loadGame(MapLoader loader)  {
+    private void loadGame(MapLoader loader) {
         levels = loader.getLevels();
         mapName = loader.getName();
 
