@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<GridPane alignment="center" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" xmlns="http://javafx.com/javafx/8.0.76-ea"
           fx:controller="fx.Main">
 
     <stylesheets>
@@ -11,19 +11,21 @@
 
     <MenuBar GridPane.rowIndex="0">
         <Menu mnemonicParsing="false" text="File">
-            <MenuItem mnemonicParsing="false" onAction="#saveGameFile" text="Save…"/>
-            <MenuItem mnemonicParsing="false" onAction="#loadGameFile" text="Load…"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+S" onAction="#saveGameFile" text="Save…"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+L" onAction="#loadGameFile" text="Load…"/>
             <SeparatorMenuItem/>
-            <MenuItem mnemonicParsing="false" onAction="#closeGame" text="Quit"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+Q" onAction="#closeGame" text="Quit"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Level">
-            <MenuItem mnemonicParsing="false" onAction="#undo" text="Undo"/>
-            <MenuItem mnemonicParsing="false" onAction="#notImplemented" text="Redo" disable="true"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+Z" onAction="#undo" text="Undo"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+Shift+Z" onAction="#notImplemented" text="Redo"
+                      disable="true"/>
             <SeparatorMenuItem/>
-            <MenuItem mnemonicParsing="false" onAction="#showLevelInfo" text="Info…"/>
-            <MenuItem mnemonicParsing="false" onAction="#setTileSize" text="Change tile size…"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+I" onAction="#showLevelInfo" text="Info…"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+T" onAction="#setTileSize"
+                      text="Change tile size…"/>
             <SeparatorMenuItem/>
-            <MenuItem mnemonicParsing="false" onAction="#resetLevel" text="Reset Level"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+R" onAction="#resetLevel" text="Reset Level"/>
         </Menu>
     </MenuBar>
 
