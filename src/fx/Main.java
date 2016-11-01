@@ -199,21 +199,38 @@ public class Main extends Application {
 
     private void bindEvents() {
         scene.setOnKeyPressed(event -> {
+            Direction d;
 
             switch (event.getCode()) {
                 case UP:
-                    engine.movePlayer(Direction.NORTH);
+                    d = Direction.NORTH;
                     break;
                 case DOWN:
-                    engine.movePlayer(Direction.SOUTH);
+                    d = Direction.SOUTH;
                     break;
                 case RIGHT:
-                    engine.movePlayer(Direction.EAST);
+                    d = Direction.EAST;
                     break;
                 case LEFT:
-                    engine.movePlayer(Direction.WEST);
+                    d = Direction.WEST;
                     break;
+                case W:
+                    d = Direction.NORTH;
+                    break;
+                case S:
+                    d = Direction.SOUTH;
+                    break;
+                case A:
+                    d = Direction.WEST;
+                    break;
+                case D:
+                    d = Direction.EAST;
+                    break;
+                default:
+                    return;
             }
+
+            engine.movePlayer(d);
 
             draw();
 
