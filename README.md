@@ -10,6 +10,9 @@ Sokoban was created in 1981 by Hiroyuki Imabayashi, and published in 1982 by Thi
 
 From: [https://en.wikipedia.org/wiki/Sokoban](https://en.wikipedia.org/wiki/Sokoban)
 
+# Screenshots
+![alt text](https://i.imgsafe.org/90929e57a8.png "screenshot")
+
 # Folder Structure
 `src/console` A console implementation of the game. Warning: Motion sickness 
 
