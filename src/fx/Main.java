@@ -283,19 +283,23 @@ public class Main extends Application {
         alert.setHeaderText(engine.getCurrentLevel().getName());
         alert.setContentText(String.format(
                 "Map name: %s" +
-                        "\nLevel %d of %d\n" +
-                        "\nCrates: %d" +
-                        "\nMoves: %d" +
-                        "\nPushes: %d" +
-                        "\nSize %dx%d",
+                        "\nLevel %d of %d" +
+                        "\nSize %dx%d\n" +
+                        "\nCrates:\t%d" +
+                        "\nOn end:\t%d" +
+                        "\nMoves:\t%d" +
+                        "\nPushes:\t%d",
+
                 engine.getMapName(),
                 engine.getLevelIndex() + 1,
                 engine.getLevelsCount(),
-                engine.getCratesCount(),
-                engine.getMovesCount(),
-                engine.getPushesCount(),
                 engine.getSokochanGrid().X_SIZE,
-                engine.getSokochanGrid().Y_SIZE
+                engine.getSokochanGrid().Y_SIZE,
+
+                engine.getCratesCount(),
+                engine.getCratesOnDiamondCount(),
+                engine.getMovesCount(),
+                engine.getPushesCount()
                 )
         );
 
