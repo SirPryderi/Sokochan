@@ -9,15 +9,16 @@
         <URL value="@style.css"/>
     </stylesheets>
 
-    <MenuBar GridPane.rowIndex="0">
+    <MenuBar GridPane.rowIndex="0" fx:id="menu">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+S" onAction="#saveGameFile" text="Save…"/>
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+L" onAction="#loadGameFile" text="Load…"/>
             <SeparatorMenuItem/>
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+Q" onAction="#closeGame" text="Quit"/>
         </Menu>
-        <Menu mnemonicParsing="false" text="Level">
-            <MenuItem mnemonicParsing="false" accelerator="Shortcut+Z" onAction="#undo" text="Undo"/>
+        <Menu mnemonicParsing="false" text="Level" disable="true">
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+Z" onAction="#undo" text="Undo"
+                      disable="true"/>
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+Shift+Z" onAction="#notImplemented" text="Redo"
                       disable="true"/>
             <SeparatorMenuItem/>
@@ -34,7 +35,7 @@
 
     <GridPane alignment="CENTER" fx:id="gameGrid" GridPane.rowIndex="1">
         <HBox GridPane.rowIndex="0">
-            <Button text="Start Game" onAction="#initGame"/>
+            <Button text="Start Game" onAction="#startGame"/>
         </HBox>
         <HBox GridPane.rowIndex="1">
             <Button text="Load Game" onAction="#loadGameFile"/>

@@ -1,6 +1,8 @@
 package fx;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -33,6 +35,8 @@ public class Main extends Application {
     private static Stage primaryStage;
 
     private static int rectangleSize = 20;
+    @FXML
+    public MenuBar menu;
 
     public static void main(String[] args) {
         launch(args);
@@ -90,7 +94,7 @@ public class Main extends Application {
             File file = fileChooser.showOpenDialog(primaryStage);
 
             if (file != null)
-                initGame(file);
+                startGame(file);
         }
     }
 
@@ -125,34 +129,41 @@ public class Main extends Application {
         }
     }
 
-    private void initGame(File file) {
+    private void startGame(File file) {
         try {
             engine = new SokochanEngine(file);
+            initGame();
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Unable to load file");
             // TODO error message
-            return;
         } catch (IndexOutOfBoundsException e) {
             // TODO better error
-            return;
         } catch (Exception e) {
             showExceptionDialog(e);
-            return;
         }
-        draw();
-        bindEvents();
     }
 
-    public void initGame() {
+    public void startGame() {
         try {
             engine = new SokochanEngine();
-
-            draw();
-            bindEvents();
+            initGame();
         } catch (Exception e) {
             showExceptionDialog(e);
         }
+    }
+
+    private void initGame() {
+        draw();
+        bindEvents();
+        menu.getMenus().get(1).setDisable(false);
+        setUndoStatus();
+    }
+
+    private void setUndoStatus() {
+        ObservableList<MenuItem> items = menu.getMenus().get(1).getItems();
+
+        items.get(0).setDisable(engine.getHistoryElementsCount() == 0);
     }
 
     private void draw() {
@@ -193,6 +204,8 @@ public class Main extends Application {
                 gameGrid.add(r, x, y);
             }
         }
+
+        setUndoStatus();
 
         primaryStage.sizeToScene();
     }

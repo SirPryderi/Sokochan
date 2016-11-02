@@ -234,6 +234,10 @@ public final class SokochanEngine {
     List<MapLoader.Level> getLevels() {
         return levels;
     }
+
+    public int getHistoryElementsCount() {
+        return historyStack.size();
+    }
     //</editor-fold>
 
     private class HistoryElement {
