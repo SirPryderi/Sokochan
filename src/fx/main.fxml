@@ -27,6 +27,9 @@
             <SeparatorMenuItem/>
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+R" onAction="#resetLevel" text="Reset Level"/>
         </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About…"/>
+        </Menu>
     </MenuBar>
 
     <GridPane alignment="CENTER" fx:id="gameGrid" GridPane.rowIndex="1">

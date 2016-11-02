@@ -385,4 +385,27 @@ public class Main extends Application {
 
         alert.showAndWait();
     }
+
+    public void showAbout() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About Sokochan");
+        alert.setHeaderText("About Sokochan");
+
+        String url = "https://github.com/SirPryderi/Sokochan";
+
+        GridPane expContent = new GridPane();
+
+        Hyperlink gitHubPageLink = new Hyperlink(url);
+
+        gitHubPageLink.setOnAction(event -> getHostServices().showDocument(url));
+
+        expContent.add(new Label("Copyright © 2016 Vittorio Iocolano"), 0, 0);
+        expContent.add(gitHubPageLink, 0, 1);
+        expContent.add(new Label("This software is distributed under GPLv3 Licence"), 0, 2);
+
+        alert.getDialogPane().setContent(expContent);
+
+        alert.showAndWait();
+    }
 }
