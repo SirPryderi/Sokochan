@@ -172,12 +172,20 @@ public final class SokochanEngine {
         final HistoryElement pop = historyStack.pop();
 
         if (pop.pushedCrate) {
+
             Crate crate = warehouseKeeper.getCrateInDirection(pop.direction);
+            assert crate != null;
+
+            boolean wasOnDiamond = crate.isOnDiamond();
 
             warehouseKeeper.move(pop.direction.getOppositeDirection());
 
-            assert crate != null;
             crate.move(pop.direction.getOppositeDirection());
+
+            if (wasOnDiamond != crate.isOnDiamond())
+                if (wasOnDiamond) cratesOnDiamondCount--;
+                else cratesOnDiamondCount++;
+
             pushesCount--;
         } else {
             warehouseKeeper.move(pop.direction.getOppositeDirection());
