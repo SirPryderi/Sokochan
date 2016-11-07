@@ -17,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sokochan.Direction;
 import sokochan.GridObjects.*;
+import sokochan.MapLoader;
 import sokochan.SokochanEngine;
 import sokochan.SokochanGrid;
 
@@ -120,8 +121,7 @@ public class Main extends Application {
                 try {
                     engine.saveGame(file);
                 } catch (IOException e) {
-                    // TODO Alert
-                    showExceptionDialog(e);
+                    showErrorDialog("Unable to access the file.", e.getMessage());
                 } catch (Exception e) {
                     showExceptionDialog(e);
                 }
@@ -134,11 +134,12 @@ public class Main extends Application {
             engine = new SokochanEngine(file);
             initGame();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Unable to load file");
-            // TODO error message
+            showErrorDialog("Unable to access the file.", e.getMessage());
         } catch (IndexOutOfBoundsException e) {
-            // TODO better error
+            showErrorDialog("Index out of bound. Irregular grid provided.", e.getMessage());
+        } catch (MapLoader.MapLoaderException e) {
+            showErrorDialog("Error while parsing the save file.", e.getMessage());
+            showExceptionDialog(e);
         } catch (Exception e) {
             showExceptionDialog(e);
         }
@@ -148,9 +149,13 @@ public class Main extends Application {
         try {
             engine = new SokochanEngine();
             initGame();
+        } catch (MapLoader.MapLoaderException e) {
+            showErrorDialog("Error while parsing the save file.", e.getMessage());
+            showExceptionDialog(e);
         } catch (Exception e) {
             showExceptionDialog(e);
         }
+
     }
 
     private void initGame() {
@@ -299,7 +304,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Not implemented");
         alert.setHeaderText(null);
-        alert.setContentText("Sorry,this function will be available in the following versions.");
+        alert.setContentText("Sorry, this function will be available in the following versions.");
 
         alert.showAndWait();
     }
@@ -395,6 +400,16 @@ public class Main extends Application {
 
         // Set expandable Exception into the dialog pane.
         alert.getDialogPane().setExpandableContent(expContent);
+
+        alert.showAndWait();
+    }
+
+    private void showErrorDialog(String error, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        alert.setTitle("Error");
+        alert.setHeaderText(error);
+        alert.setContentText(message);
 
         alert.showAndWait();
     }

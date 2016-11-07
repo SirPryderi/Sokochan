@@ -33,7 +33,7 @@ public final class SokochanEngine {
     /**
      * Loads the default map
      */
-    public SokochanEngine() {
+    public SokochanEngine() throws MapLoader.MapLoaderException {
         MapLoader loader = new MapLoader();
 
         loader.loadMap();
@@ -48,7 +48,7 @@ public final class SokochanEngine {
      * @throws IOException                           in case the file is not reachable
      * @throws sokochan.MapLoader.MapLoaderException in case it is not a valid map
      */
-    public SokochanEngine(File file) throws IOException {
+    public SokochanEngine(File file) throws IOException, MapLoader.MapLoaderException {
         MapLoader loader = new MapLoader();
 
         loader.loadMap(file);

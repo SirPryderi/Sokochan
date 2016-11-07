@@ -229,7 +229,7 @@ public class MapLoader {
         }
     }
 
-    public class MapLoaderException extends RuntimeException {
+    public class MapLoaderException extends Exception {
         public MapLoaderException(String message) {
             super(message);
         }

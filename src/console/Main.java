@@ -2,6 +2,7 @@ package console;
 
 import sokochan.Direction;
 import sokochan.GridObjects.*;
+import sokochan.MapLoader;
 import sokochan.SokochanEngine;
 import sokochan.SokochanGrid;
 
@@ -14,7 +15,7 @@ import java.util.Scanner;
  */
 class Main {
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws MapLoader.MapLoaderException {
         SokochanEngine engine = new SokochanEngine();
 
         printGrid(engine.getSokochanGrid());
