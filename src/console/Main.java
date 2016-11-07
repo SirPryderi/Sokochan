@@ -6,6 +6,7 @@ import sokochan.MapLoader;
 import sokochan.SokochanEngine;
 import sokochan.SokochanGrid;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Scanner;
  */
 class Main {
 
-    public static void main(String args[]) throws MapLoader.MapLoaderException {
+    public static void main(String args[]) throws MapLoader.MapLoaderException, IOException {
         SokochanEngine engine = new SokochanEngine();
 
         printGrid(engine.getSokochanGrid());

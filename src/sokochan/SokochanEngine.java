@@ -33,7 +33,7 @@ public final class SokochanEngine {
     /**
      * Loads the default map
      */
-    public SokochanEngine() throws MapLoader.MapLoaderException {
+    public SokochanEngine() throws MapLoader.MapLoaderException, IOException {
         MapLoader loader = new MapLoader();
 
         loader.loadMap();

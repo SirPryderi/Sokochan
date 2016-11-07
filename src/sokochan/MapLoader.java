@@ -25,14 +25,14 @@ public class MapLoader {
         levels = new ArrayList<>();
     }
 
-    void loadMap() throws MapLoaderException, NullPointerException {
+    void loadMap() throws MapLoaderException, NullPointerException, IOException {
         InputStream systemResourceAsStream = ClassLoader.getSystemResourceAsStream("maps/SampleGame.skb");
 
-        Reader targetReader = new InputStreamReader(systemResourceAsStream);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(systemResourceAsStream));
 
-        BufferedReader reader = new BufferedReader(targetReader);
+        loadMap(bufferedReader.lines());
 
-        loadMap(reader.lines());
+        bufferedReader.close();
     }
 
     void loadMap(File file) throws IOException, MapLoaderException {
@@ -157,10 +157,6 @@ public class MapLoader {
     int getInProgressLevelIndex() {
         return inProgressLevelIndex;
     }
-
-    public int getNumberOfLevels() {
-        return levels.size();
-    }
     //</editor-fold>
 
     public class Level implements Iterable {
@@ -230,7 +226,7 @@ public class MapLoader {
     }
 
     public class MapLoaderException extends Exception {
-        public MapLoaderException(String message) {
+        MapLoaderException(String message) {
             super(message);
         }
     }
