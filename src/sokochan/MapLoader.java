@@ -15,17 +15,27 @@ import java.util.stream.Stream;
  * Loads levels from a *.skb file and provides them to the {@link SokochanEngine}
  * Created by Vittorio on 25-Oct-16.
  */
-public class MapLoader {
+public final class MapLoader {
     private final List<Level> levels;
     private String name;
     private Level inProgressLevel;
     private int inProgressLevelIndex;
+    private boolean mapLoaded;
 
+    /**
+     * Default constructor for the MapLoader
+     */
     public MapLoader() {
         levels = new ArrayList<>();
     }
 
-    void loadMap() throws MapLoaderException, NullPointerException, IOException {
+    /**
+     * Loads the default game into the {@link MapLoader}
+     *
+     * @throws MapLoaderException if the SaveFile is invalid
+     * @throws IOException        if the file is not found
+     */
+    void loadMap() throws MapLoaderException, IOException {
         InputStream systemResourceAsStream = ClassLoader.getSystemResourceAsStream("maps/SampleGame.skb");
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(systemResourceAsStream));
@@ -35,6 +45,13 @@ public class MapLoader {
         bufferedReader.close();
     }
 
+    /**
+     * Loads a SaveFile into the {@link MapLoader}
+     *
+     * @param file path to the SaveFile
+     * @throws IOException        if the file is not found
+     * @throws MapLoaderException if the SaveFile is invalid
+     */
     void loadMap(File file) throws IOException, MapLoaderException {
         Path file1 = file.toPath();
 
@@ -43,11 +60,21 @@ public class MapLoader {
         loadMap(lines);
     }
 
+    /**
+     * Loads a game given a {@link Stream} {@link String}s, for each line.
+     *
+     * @param lines A Stream containing a line in each string
+     * @throws MapLoaderException if the SaveFile is invalid
+     */
     private void loadMap(Stream<String> lines) throws MapLoaderException {
+        mapLoaded = false;
+
         Iterator<String> i = lines.iterator();
 
         boolean isInProgressLevel = false;
 
+        // I think I have no clue of what is happening here anymore
+        // Just the result of poor planning, I guess. I hope you like spaghetti.
         while (i.hasNext()) {
             String s = i.next();
 
@@ -82,8 +109,17 @@ public class MapLoader {
                     level.content.add(s);
             }
         }
+
+        mapLoaded = true;
     }
 
+    /**
+     * Saves the current state of the {@link SokochanEngine} into a SaveFile
+     *
+     * @param file   the path where to save the game
+     * @param engine the {@link SokochanEngine}, to save the state from
+     * @throws IOException if the file is not accessible
+     */
     void saveMap(File file, SokochanEngine engine) throws IOException {
         StringBuilder builder = new StringBuilder();
 
@@ -101,13 +137,14 @@ public class MapLoader {
             });
             builder.append("\n");
         }
-        // The normal level has been saved now
+        // The normal levels have been saved now
 
         // Now append the progress of the current level
         builder.append("CurrentLevel: ");
         builder.append(engine.getLevelIndex());
         builder.append("\n");
 
+        // Foreach tile in the grid
         engine.getSokochanGrid().forEach(tileGridObject -> {
             MovableGridObject content = tileGridObject.getPlacedObject();
 
@@ -129,59 +166,104 @@ public class MapLoader {
                     builder.append('s');
             }
 
-            // If it's the last in the row, send a carriage return
+            // If it's the last in the row, send a new line
             if (tileGridObject.getPosition().getX() == engine.getSokochanGrid().X_SIZE - 1)
                 builder.append('\n');
         });
 
+        // At last write the file
         Files.write(file.toPath(), builder.toString().getBytes());
     }
 
+    /**
+     * @return all levels in a map
+     */
     //<editor-fold desc="Getters and Setters" defaultstate="collapsed">
     List<Level> getLevels() {
         return levels;
     }
 
+    /**
+     * @return the name of the map as specified in the save file
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name sets the name of the map
+     */
     private void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return gets the level that has been saved while being played, in order to restore it's status when reloaded
+     */
     Level getInProgressLevel() {
         return inProgressLevel;
     }
 
+    /**
+     * @return returns the index of the level that has been saved as 'in progress'
+     */
     int getInProgressLevelIndex() {
         return inProgressLevelIndex;
     }
+
+    /**
+     * @return whether the map has been loaded
+     */
+    boolean isMapLoaded() {
+        return mapLoaded;
+    }
     //</editor-fold>
 
+    //<editor-fold desc="Level" defaultstate="collapsed">
+
+    /**
+     * An object representing a single level in a Map
+     */
     public class Level implements Iterable {
         private final String name;
 
         private final List<String> content;
 
+        /**
+         * Creates a new level given the name. Will instantiate an array of {@link String}s
+         *
+         * @param name of the level
+         */
         public Level(String name) {
             this.name = name;
             content = new ArrayList<>();
         }
 
+        /**
+         * @return the name of the level
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * @return a string representing the a row of the level
+         */
         public List<String> getContent() {
             return content;
         }
 
+        /**
+         * @return the width of the level
+         */
         public int getX() {
-            // Maybe check that they are of the same length
+            // TODO Maybe check that they are of the same length
             return content.get(0).length();
         }
 
+        /**
+         * @return the height of the level
+         */
         public int getY() {
             return content.size();
         }
@@ -198,6 +280,9 @@ public class MapLoader {
             private int x = -1;
             private int y = 0;
 
+            /**
+             * Instantiate the sizes variable
+             */
             private MapIterator() {
                 X = getX();
                 Y = getY();
@@ -208,6 +293,9 @@ public class MapLoader {
                 return y < Y - 1 || x < X - 1;
             }
 
+            /**
+             * @return the position at the current iteration
+             */
             public Point getPosition() {
                 return new Point(x, y);
             }
@@ -224,8 +312,15 @@ public class MapLoader {
             }
         }
     }
+    //</editor-fold>
 
+    /**
+     * An {@link Exception} that is thrown when a loaded map is malformed
+     */
     public class MapLoaderException extends Exception {
+        /**
+         * @param message the message telling what's gone wrong
+         */
         MapLoaderException(String message) {
             super(message);
         }

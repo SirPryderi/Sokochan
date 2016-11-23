@@ -13,16 +13,35 @@ import java.awt.*;
  * Created by Vittorio on 05-Oct-16.
  */
 public class WarehouseKeeper extends MovableGridObject {
+    /**
+     * Creates and places a {@link WarehouseKeeper} in the {@link SokochanGrid}
+     *
+     * @param grid     parent grid
+     * @param position where to put the {@link WarehouseKeeper}
+     */
     public WarehouseKeeper(SokochanGrid grid, Point position) {
         super(grid, position);
     }
 
+    /**
+     * Attempts to push a {@link Crate} in a given {@link Direction}. Returns a boolean accordingly.
+     *
+     * @param crate     the crate to move
+     * @param direction where pushing the crate
+     * @return {@code true} if pushed | {@code false} if failed to push (crate is blocked)
+     */
     @SuppressWarnings("UnusedReturnValue")
     private boolean push(Crate crate, Direction direction) {
         return crate.move(direction);
 
     }
 
+    /**
+     * Returns a {@link Crate} adjacent to the {@link WarehouseKeeper} in a given direction, {@code null} otherwise.
+     *
+     * @param direction where to find the {@link Crate}
+     * @return the crate or {@code null}
+     */
     public Crate getCrateInDirection(Direction direction) {
         MovableGridObject object = getNeighbour(direction);
 

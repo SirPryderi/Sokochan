@@ -6,7 +6,6 @@ import sokochan.GridObjects.TileGridObject;
 
 import java.awt.*;
 import java.util.Iterator;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * This class wraps a two dimensional array of {@link Tile}s
@@ -18,21 +17,48 @@ import java.util.concurrent.ThreadLocalRandom;
  * {@link sokochan.GridObjects.Crate}s and {@link sokochan.GridObjects.WarehouseKeeper} are paced inside the {@link Tile}.
  * Created by Vittorio on 05-Oct-16.
  */
-public class SokochanGrid implements Iterable<TileGridObject> {
-    public final int X_SIZE, Y_SIZE;
+public final class SokochanGrid implements Iterable<TileGridObject> {
+    /**
+     * The width of the grid
+     */
+    public final int X_SIZE;
+
+    /**
+     * the height of the grid
+     */
+    public final int Y_SIZE;
 
     private final TileGridObject[][] tileGridObjects;
 
+    /**
+     * Constructor for the grid. Creates a grid of {@code null}s
+     *
+     * @param x width of the grid
+     * @param y height of the grid
+     */
     SokochanGrid(int x, int y) {
         X_SIZE = x;
         Y_SIZE = y;
         tileGridObjects = new TileGridObject[X_SIZE][Y_SIZE];
     }
 
+    /**
+     * * Gives the tile at a given position
+     *
+     * @param position a {@link Point} representing the position
+     * @return The tile contained in a position or {@code null} if out of bound
+     */
     public TileGridObject getTile(Point position) {
         return getTile(position.x, position.y);
     }
 
+    /**
+     * Gives the tile at a given position
+     *
+     * @param x position
+     * @param y position
+     * @return The tile contained in a position or {@code null} if out of bound
+     */
     public TileGridObject getTile(int x, int y) {
         if (x < 0 || x >= X_SIZE || y < 0 || y >= Y_SIZE) {
             return null;
@@ -40,6 +66,14 @@ public class SokochanGrid implements Iterable<TileGridObject> {
         return tileGridObjects[x][y];
     }
 
+    /**
+     * Gives the object placed on a {@link TileGridObject} at a given position
+     *
+     * @param x position
+     * @param y position
+     * @return the object placed on a tile at the given position
+     * @throws NullPointerException if there there is not {@link TileGridObject} at the give position
+     */
     public MovableGridObject getGridObject(int x, int y) {
         if (x < 0 || x >= X_SIZE || y < 0 || y >= Y_SIZE) {
             return null;
@@ -47,69 +81,60 @@ public class SokochanGrid implements Iterable<TileGridObject> {
         return tileGridObjects[x][y].getPlacedObject();
     }
 
+    /**
+     * Gives the object placed on a {@link TileGridObject} at a given position
+     *
+     * @param position the given position
+     * @return the object placed on a tile at the given position
+     * @throws NullPointerException if there there is no {@link TileGridObject} at the give position
+     */
     public MovableGridObject getGridObject(Point position) {
         return getGridObject(position.x, position.y);
     }
 
-
-    private boolean setGridObject(int x, int y, MovableGridObject object) {
-        return !(x < 0 || x >= X_SIZE || y < 0 || y >= Y_SIZE) && tileGridObjects[x][y].setPlacedObject(object);
+    /**
+     * Removes an {@link MovableGridObject} on a {@link sokochan.GridObjects.GridObject} at the given position.
+     *
+     * @param position position
+     *                 {@code false} if out of grid bound or already occupied
+     * @throws NullPointerException if there there is no {@link TileGridObject} at the give position
+     */
+    public void removeGridObject(Point position) {
+        if (!(position.x < 0 || position.x >= X_SIZE || position.y < 0 || position.y >= Y_SIZE))
+            tileGridObjects[position.x][position.y].setPlacedObject(null);
     }
 
-    public boolean setGridObject(Point position, MovableGridObject object) {
-        return setGridObject(position.x, position.y, object);
-    }
-
-    private void setGridTile(int x, int y, TileGridObject tile) {
-        tileGridObjects[x][y] = tile;
-    }
-
+    /**
+     * Sets a {@link TileGridObject} at a given position in the {@link SokochanGrid}
+     *
+     * @param position the position {@link Point}
+     * @param tile     the tile to place
+     */
     public void setGridTile(Point position, TileGridObject tile) {
-        setGridTile(position.x, position.y, tile);
+        tileGridObjects[position.x][position.y] = tile;
     }
 
-    private boolean isTileWalkable(int x, int y) {
-        if (x < 0 || x >= X_SIZE || y < 0 || y >= Y_SIZE) {
-            return false;
+    /**
+     * Populates the whole grid with empty {@link Tile}
+     */
+    void populateWithTiles() {
+        GridIterator iterator = iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+            new Tile(this, iterator.getPosition());
         }
-
-        TileGridObject tile = getTile(x, y);
-
-        return tile != null && tile.isWalkable();
     }
 
-    public boolean isTileWalkable(Point pos) {
-        return isTileWalkable(pos.x, pos.y);
-    }
-
+    //<editor-fold desc="Iterator" defaultstate="collapsed">
     @Override
-    public Iterator<TileGridObject> iterator() {
+    public GridIterator iterator() {
         return new GridIterator();
     }
 
-    @SuppressWarnings("WeakerAccess")
-    Point randomPosition() {
-        // TODO fix potential stack overflow
-
-        int x = ThreadLocalRandom.current().nextInt(0, X_SIZE);
-        int y = ThreadLocalRandom.current().nextInt(0, Y_SIZE);
-
-        if (!isTileWalkable(x, y)) {
-            return randomPosition();
-        }
-
-        return new Point(x, y);
-    }
-
-    void populateWithTiles() {
-        // Populates the grid with free tiles
-        for (int x = 0; x < X_SIZE; x++) {
-            for (int y = 0; y < Y_SIZE; y++) {
-                new Tile(this, new Point(x, y));
-            }
-        }
-    }
-
+    /**
+     * An iterator class that will iterate every {@link TileGridObject} in the {@link SokochanGrid}
+     * getPosition can be used to retrieve the current {@link Point} in the {@link SokochanGrid}
+     */
     private class GridIterator implements Iterator<TileGridObject> {
         private int x = -1;
         private int y = 0;
@@ -125,6 +150,18 @@ public class SokochanGrid implements Iterable<TileGridObject> {
             return tileGridObjects[x][y];
         }
 
+        /**
+         * Gives the current coordinates of the iterator
+         *
+         * @return the {@link Point} representing the current coordinates
+         */
+        public Point getPosition() {
+            return new Point(x, y);
+        }
+
+        /**
+         * Increments the position in the grid by one, moving to the next row if the column is over
+         */
         private void increment() {
             if (x < X_SIZE - 1) {
                 x++;
@@ -134,4 +171,5 @@ public class SokochanGrid implements Iterable<TileGridObject> {
             }
         }
     }
+    //</editor-fold>
 }

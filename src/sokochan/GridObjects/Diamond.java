@@ -9,6 +9,12 @@ import java.awt.*;
  * Created by Vittorio on 12-Oct-16.
  */
 public class Diamond extends Tile {
+    /**
+     * Creates and places a {@link Diamond} in the {@link SokochanGrid}
+     *
+     * @param grid     parent grid
+     * @param position where to put the {@link Diamond}
+     */
     public Diamond(SokochanGrid grid, Point position) {
         super(grid, position);
     }

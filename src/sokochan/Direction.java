@@ -2,13 +2,25 @@ package sokochan;
 
 /**
  * An enumeration containing all the possible movements in the {@link SokochanGrid}.
- *
+ * <p>
  * Created by Vittorio on 05-Oct-16.
  */
 public enum Direction {
+    /**
+     * (0, -1)
+     */
     NORTH,
+    /**
+     * (1, 0)
+     */
     EAST,
+    /**
+     * (0, 1)
+     */
     SOUTH,
+    /**
+     * (-1, 0)
+     */
     WEST;
 
     static {
@@ -20,6 +32,9 @@ public enum Direction {
 
     private Direction opposite;
 
+    /**
+     * @return the opposite {@link Direction}
+     */
     public Direction getOppositeDirection() {
         return opposite;
     }
