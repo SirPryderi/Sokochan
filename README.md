@@ -23,3 +23,6 @@ From: [https://en.wikipedia.org/wiki/Sokoban](https://en.wikipedia.org/wiki/Soko
 `src/META-INF` Java manifest folder.
 
 `src/sokochan` Contains the Engine class and the various classes for the objects used in the game.
+
+# Engine Documentation
+Available here: https://sirpryderi.github.io/Sokochan/
