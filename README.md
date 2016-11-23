@@ -20,6 +20,6 @@ From: [https://en.wikipedia.org/wiki/Sokoban](https://en.wikipedia.org/wiki/Soko
 
 `src/maps` Contains some default maps to load from.
 
-`src/META-IF` Java manifest folder.
+`src/META-INF` Java manifest folder.
 
 `src/sokochan` Contains the Engine class and the various classes for the objects used in the game.
