@@ -136,8 +136,6 @@ public final class SokochanEngine {
 
         sokochanGrid = new SokochanGrid(level.getX(), level.getY());
 
-        sokochanGrid.populateWithTiles();
-
         MapLoader.Level.MapIterator i = level.iterator();
 
         while (i.hasNext()) {

@@ -36,10 +36,11 @@ public final class SokochanGrid implements Iterable<TileGridObject> {
      * @param x width of the grid
      * @param y height of the grid
      */
-    SokochanGrid(int x, int y) {
+    public SokochanGrid(int x, int y) {
         X_SIZE = x;
         Y_SIZE = y;
         tileGridObjects = new TileGridObject[X_SIZE][Y_SIZE];
+        populateWithTiles();
     }
 
     /**
@@ -117,7 +118,7 @@ public final class SokochanGrid implements Iterable<TileGridObject> {
     /**
      * Populates the whole grid with empty {@link Tile}
      */
-    void populateWithTiles() {
+    private void populateWithTiles() {
         GridIterator iterator = iterator();
         while (iterator.hasNext()) {
             iterator.next();
