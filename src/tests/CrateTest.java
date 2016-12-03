@@ -17,10 +17,10 @@ import static org.junit.Assert.assertSame;
  */
 @SuppressWarnings("JavaDoc")
 public class CrateTest {
-    SokochanGrid grid = new SokochanGrid(5, 5);
-    Crate crate = new Crate(grid, new Point(0, 0));
-    Crate crateOnDiamond = new Crate(grid, new Point(4, 4));
-    Diamond diamond = new Diamond(grid, new Point(4, 4));
+    private SokochanGrid grid = new SokochanGrid(5, 5);
+    private Crate crate = new Crate(grid, new Point(0, 0));
+    private Crate crateOnDiamond = new Crate(grid, new Point(4, 4));
+    private Diamond diamond = new Diamond(grid, new Point(4, 4));
 
     @Test
     public void isOnDiamond() throws Exception {
