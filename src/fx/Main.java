@@ -328,10 +328,11 @@ public class Main extends Application {
      * Quits the game, after asking for confirmation.
      */
     public void closeGame() {
-
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        addIcon(alert);
         alert.setHeaderText(null);
         alert.setTitle("Quit Game");
+        addIcon(alert);
         alert.setContentText("Are you sure you want to quit?");
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -346,6 +347,7 @@ public class Main extends Application {
      */
     public void notImplemented() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        addIcon(alert);
         alert.setTitle("Not implemented");
         alert.setHeaderText(null);
         alert.setContentText("Sorry, this function will be available in the following versions.");
@@ -361,6 +363,7 @@ public class Main extends Application {
             return;
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        addIcon(alert);
         alert.setTitle("Level Information");
         alert.setHeaderText(engine.getCurrentLevel().getName());
         alert.setContentText(String.format(
@@ -396,6 +399,7 @@ public class Main extends Application {
 
         do {
             TextInputDialog dialog = new TextInputDialog(String.valueOf(getRectangleSize()));
+            addIcon(dialog);
             dialog.setTitle("Tile size");
             dialog.setHeaderText("Set the tile size");
             if (error)
@@ -419,10 +423,10 @@ public class Main extends Application {
      * Opens the about dialog, showing the author and license.
      */
     public void showAbout() {
-
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About Sokochan");
         alert.setHeaderText("About Sokochan");
+        addIcon(alert);
 
         String url = "https://github.com/SirPryderi/Sokochan";
 
@@ -455,6 +459,7 @@ public class Main extends Application {
         ex.printStackTrace();
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        addIcon(alert);
         alert.setTitle("Exception Dialog");
         alert.setHeaderText("An unhandled exception occurred!");
         alert.setContentText("Message: " + ex.getMessage());
@@ -489,17 +494,27 @@ public class Main extends Application {
 
     /**
      * Simple error dialog
-     * @param error the title of the error
+     *
+     * @param error   the title of the error
      * @param message full message of the error
      */
     private void showErrorDialog(String error, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-
+        addIcon(alert);
         alert.setTitle("Error");
         alert.setHeaderText(error);
         alert.setContentText(message);
 
         alert.showAndWait();
+    }
+
+    /**
+     * Adds the default icon to a {@link Dialog}
+     *
+     * @param dialog dialog to add the icon to
+     */
+    private void addIcon(Dialog dialog) {
+        ((Stage) dialog.getDialogPane().getScene().getWindow()).getIcons().add(primaryStage.getIcons().get(0));
     }
     //</editor-fold>
 
