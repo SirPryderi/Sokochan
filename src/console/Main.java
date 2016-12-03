@@ -16,6 +16,13 @@ import java.util.Scanner;
  */
 class Main {
 
+    /**
+     * Starts the game
+     *
+     * @param args no command lines args are used
+     * @throws MapLoader.MapLoaderException when the map is not valid
+     * @throws IOException                  if failed to load the file
+     */
     public static void main(String args[]) throws MapLoader.MapLoaderException, IOException {
         SokochanEngine engine = new SokochanEngine();
 
@@ -53,6 +60,11 @@ class Main {
         }
     }
 
+    /**
+     * Show the game status to the terminal
+     *
+     * @param grid the grid to print
+     */
     private static void printGrid(SokochanGrid grid) {
         clearScreen();
 
@@ -80,6 +92,9 @@ class Main {
         }
     }
 
+    /**
+     * Clears the screen. Hopefully it's multi-platform as well.
+     */
     private static void clearScreen() {
         try {
             final String os = System.getProperty("os.name");

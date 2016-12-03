@@ -93,7 +93,7 @@ public final class SokochanEngine {
      */
     private void loadGame(MapLoader loader) {
         if (!loader.isMapLoaded()) {
-            throw new InvalidStateException("Map is not loaded");
+            throw new RuntimeException("Map is not loaded");
         }
 
         levels = loader.getLevels();
@@ -191,6 +191,7 @@ public final class SokochanEngine {
      * @param direction the direction where to move the player
      * @return {@code true} if successfully moved | {@code false} if failed to move
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean movePlayer(Direction direction) {
         boolean pushed = false;
         boolean moved = false;

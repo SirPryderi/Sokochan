@@ -28,27 +28,33 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.Optional;
 
+/**
+ * The entry class for the JavaFX application functioning as GUI for the {@link SokochanEngine} game
+ */
 public class Main extends Application {
-    public static GridPane gameGrid;
-
+    //<editor-fold desc="JavaFX" default-state="collapsed">
+    // JavaFX modules
     private static Scene scene;
-    private static SokochanEngine engine;
     private static Stage primaryStage;
 
-    private static int rectangleSize = 20;
+    // JavaFX nodes
     @FXML
-    public MenuBar menu;
+    private MenuBar menu;
+    @FXML
+    private GridPane gameGrid;
+    //</editor-fold>
 
+    // Game Vars
+    private SokochanEngine engine;
+    private int rectangleSize = 20;
+
+    /**
+     * Launches the JavaFX application
+     *
+     * @param args no console arguments used
+     */
     public static void main(String[] args) {
         launch(args);
-    }
-
-    private static int getRectangleSize() {
-        return rectangleSize;
-    }
-
-    private static void setRectangleSize(int rectangleSize) {
-        Main.rectangleSize = rectangleSize;
     }
 
     @Override
@@ -74,64 +80,18 @@ public class Main extends Application {
         primaryStage.sizeToScene();
     }
 
-    private File getDefaultLocation() {
-        File folder = new File(System.getProperty("user.dir") + "\\src\\maps\\");
-
-        if (!Files.exists(folder.toPath())) {
-            folder = new File(System.getProperty("user.dir"));
-        }
-
-        return folder;
-    }
-
-    public void loadGameFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Save File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sokoban File", "*.skb"));
-
-        try {
-            fileChooser.setInitialDirectory(getDefaultLocation());
-        } finally {
-            File file = fileChooser.showOpenDialog(primaryStage);
-
-            if (file != null)
-                startGame(file);
-        }
-    }
-
-    public void resetLevel() {
-        if (engine == null)
-            return;
-
-        engine.loadLevel(engine.getLevelIndex());
-        draw();
-    }
-
-    public void saveGameFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Game File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sokoban File", "*.skb"));
-
-        try {
-            fileChooser.setInitialDirectory(getDefaultLocation());
-        } finally {
-            File file = fileChooser.showSaveDialog(primaryStage);
-
-            if (file != null) {
-                try {
-                    engine.saveGame(file);
-                } catch (IOException e) {
-                    showErrorDialog("Unable to access the file.", e.getMessage());
-                } catch (Exception e) {
-                    showExceptionDialog(e);
-                }
-            }
-        }
-    }
-
+    /**
+     * Starts the game given a file name. In case of exception will show different dialogs.
+     *
+     * @param file the game file to load
+     */
     private void startGame(File file) {
         try {
-            engine = new SokochanEngine(file);
+            if (file == null) // Loads default map
+                engine = new SokochanEngine();
+            else
+                engine = new SokochanEngine(file);
+
             initGame();
         } catch (IOException e) {
             showErrorDialog("Unable to access the file.", e.getMessage());
@@ -145,19 +105,9 @@ public class Main extends Application {
         }
     }
 
-    public void startGame() {
-        try {
-            engine = new SokochanEngine();
-            initGame();
-        } catch (MapLoader.MapLoaderException e) {
-            showErrorDialog("Error while parsing the save file.", e.getMessage());
-            showExceptionDialog(e);
-        } catch (Exception e) {
-            showExceptionDialog(e);
-        }
-
-    }
-
+    /**
+     * Initialises the interface and makes the game ready to be played
+     */
     private void initGame() {
         draw();
         bindEvents();
@@ -165,12 +115,22 @@ public class Main extends Application {
         setUndoStatus();
     }
 
-    private void setUndoStatus() {
-        ObservableList<MenuItem> items = menu.getMenus().get(1).getItems();
+    /**
+     * @return The default location to save/load a game
+     */
+    private File getDefaultLocation() {
+        File folder = new File(System.getProperty("user.dir") + "\\src\\maps\\");
 
-        items.get(0).setDisable(engine.getHistoryElementsCount() == 0);
+        if (!Files.exists(folder.toPath())) {
+            folder = new File(System.getProperty("user.dir"));
+        }
+
+        return folder;
     }
 
+    /**
+     * Draws the grid to the main windows. It removes the main menu in the process.
+     */
     private void draw() {
         if (engine == null)
             return;
@@ -215,6 +175,9 @@ public class Main extends Application {
         primaryStage.sizeToScene();
     }
 
+    /**
+     * Binds keyboard event to the game engine
+     */
     private void bindEvents() {
         scene.setOnKeyPressed(event -> {
             Direction d;
@@ -278,6 +241,81 @@ public class Main extends Application {
         });
     }
 
+    /**
+     * Disables or enables the "undo" menu entry
+     */
+    private void setUndoStatus() {
+        ObservableList<MenuItem> items = menu.getMenus().get(1).getItems();
+
+        items.get(0).setDisable(engine.getHistoryElementsCount() == 0);
+    }
+
+    //<editor-fold desc="UI Event Handlers" defaultstate="collapsed">
+
+    /**
+     * Opens the load game window
+     */
+    public void loadGameFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Save File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sokoban File", "*.skb"));
+
+        try {
+            fileChooser.setInitialDirectory(getDefaultLocation());
+        } finally {
+            File file = fileChooser.showOpenDialog(primaryStage);
+
+            if (file != null)
+                startGame(file);
+        }
+    }
+
+    /**
+     * Resets the level to the initial status
+     */
+    public void resetLevel() {
+        if (engine == null)
+            return;
+
+        engine.loadLevel(engine.getLevelIndex());
+        draw();
+    }
+
+    /**
+     * Opens the windows to save the game
+     */
+    public void saveGameFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Game File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Sokoban File", "*.skb"));
+
+        try {
+            fileChooser.setInitialDirectory(getDefaultLocation());
+        } finally {
+            File file = fileChooser.showSaveDialog(primaryStage);
+
+            if (file != null) {
+                try {
+                    engine.saveGame(file);
+                } catch (IOException e) {
+                    showErrorDialog("Unable to access the file.", e.getMessage());
+                } catch (Exception e) {
+                    showExceptionDialog(e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Overloaded method for {@code startGame(File file)}, that loads the default game.
+     */
+    public void startGame() {
+        startGame(null);
+    }
+
+    /**
+     * Cancel the last move made by the player
+     */
     public void undo() {
         if (engine == null)
             return;
@@ -286,6 +324,9 @@ public class Main extends Application {
         draw();
     }
 
+    /**
+     * Quits the game, after asking for confirmation.
+     */
     public void closeGame() {
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -300,6 +341,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Dialog to display for non implemented functions
+     */
     public void notImplemented() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Not implemented");
@@ -309,6 +353,9 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
+    /**
+     * Opens the dialog that shows info about the level
+     */
     public void showLevelInfo() {
         if (engine == null)
             return;
@@ -341,6 +388,9 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
+    /**
+     * Opens the dialog to change the size of the grid elements
+     */
     public void setTileSize() {
         boolean error = false;
 
@@ -365,7 +415,40 @@ public class Main extends Application {
         draw();
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Opens the about dialog, showing the author and license.
+     */
+    public void showAbout() {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About Sokochan");
+        alert.setHeaderText("About Sokochan");
+
+        String url = "https://github.com/SirPryderi/Sokochan";
+
+        GridPane expContent = new GridPane();
+
+        Hyperlink gitHubPageLink = new Hyperlink(url);
+
+        gitHubPageLink.setOnAction(event -> getHostServices().showDocument(url));
+
+        expContent.add(new Label("Copyright © 2016 Vittorio Iocolano"), 0, 0);
+        expContent.add(gitHubPageLink, 0, 1);
+        expContent.add(new Label("This software is distributed under GPLv3 Licence"), 0, 2);
+
+        alert.getDialogPane().setContent(expContent);
+
+        alert.showAndWait();
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Dialogs">
+
+    /**
+     * Displays the exception stack trace and message
+     *
+     * @param ex the exception to show
+     */
     private void showExceptionDialog(Exception ex) {
         // credit: http://code.makery.ch/blog/javafx-dialogs-official/
 
@@ -404,6 +487,11 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
+    /**
+     * Simple error dialog
+     * @param error the title of the error
+     * @param message full message of the error
+     */
     private void showErrorDialog(String error, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
 
@@ -413,27 +501,15 @@ public class Main extends Application {
 
         alert.showAndWait();
     }
+    //</editor-fold>
 
-    public void showAbout() {
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("About Sokochan");
-        alert.setHeaderText("About Sokochan");
-
-        String url = "https://github.com/SirPryderi/Sokochan";
-
-        GridPane expContent = new GridPane();
-
-        Hyperlink gitHubPageLink = new Hyperlink(url);
-
-        gitHubPageLink.setOnAction(event -> getHostServices().showDocument(url));
-
-        expContent.add(new Label("Copyright © 2016 Vittorio Iocolano"), 0, 0);
-        expContent.add(gitHubPageLink, 0, 1);
-        expContent.add(new Label("This software is distributed under GPLv3 Licence"), 0, 2);
-
-        alert.getDialogPane().setContent(expContent);
-
-        alert.showAndWait();
+    //<editor-fold desc="Getters and Setters">
+    private int getRectangleSize() {
+        return rectangleSize;
     }
+
+    private void setRectangleSize(int rectangleSize) {
+        this.rectangleSize = rectangleSize;
+    }
+    //</editor-fold>
 }
