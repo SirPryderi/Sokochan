@@ -216,11 +216,12 @@ public class Main extends Application {
             draw();
 
             if (engine.isComplete()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Victory!");
+                alert.setHeaderText(null);
+                addIcon(alert);
                 if (engine.getLevelIndex() + 1 < engine.getLevelsCount()) {
 
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Victory!");
-                    alert.setHeaderText(null);
                     alert.setContentText("You completed the game in " + engine.getMovesCount() + " moves!\nPress okay to load the next level.");
 
                     alert.showAndWait();
@@ -228,9 +229,6 @@ public class Main extends Application {
                     engine.loadLevel(engine.getLevelIndex() + 1);
                     draw();
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Victory!");
-                    alert.setHeaderText(null);
                     alert.setContentText("You completed the game in " + engine.getMovesCount() + " moves!\n This was the last level in the map, congrats!");
 
                     alert.showAndWait();
