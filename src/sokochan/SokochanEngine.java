@@ -198,16 +198,16 @@ public final class SokochanEngine {
 
         int status = warehouseKeeper.movePushing(direction);
 
-        if (status >= 1) {
+        if (status >= WarehouseKeeper.MOVE_PUSHED) {
             pushed = true;
             moved = true;
             pushesCount++;
-            if (status == 2) {
+            if (status == WarehouseKeeper.MOVE_PUSHED_ON_DIAMOND) {
                 cratesOnDiamondCount++;
-            } else if (status == 3) {
+            } else if (status == WarehouseKeeper.MOVE_PUSHED_OFF_DIAMOND) {
                 cratesOnDiamondCount--;
             }
-        } else if (status == 0) {
+        } else if (status == WarehouseKeeper.MOVE_FAILED) {
             pushed = false;
             moved = true;
         }

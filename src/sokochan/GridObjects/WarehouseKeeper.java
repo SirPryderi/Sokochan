@@ -14,6 +14,27 @@ import java.awt.*;
  */
 public class WarehouseKeeper extends MovableGridObject {
     /**
+     * Return code for failed movement
+     */
+    public final static int MOVE_FAILED = -1;
+    /**
+     * Return code for successful movement without any pushing
+     */
+    public final static int MOVE_NOT_PUSHED = 0;
+    /**
+     * Return code for successful movement with a pushing that didn't change the number of {@link Crate}s on {@link Diamond}
+     */
+    public final static int MOVE_PUSHED = 1;
+    /**
+     * Return code for successful movement with a pushing that resulted in another {@link Crate} moved on diamond {@link Diamond}
+     */
+    public final static int MOVE_PUSHED_ON_DIAMOND = 2;
+    /**
+     * Return code for successful movement with a pushing that resulted in fewer {@link Crate}s moved on diamond {@link Diamond}
+     */
+    public final static int MOVE_PUSHED_OFF_DIAMOND = 3;
+
+    /**
      * Creates and places a {@link WarehouseKeeper} in the {@link SokochanGrid}
      *
      * @param grid     parent grid
@@ -65,21 +86,22 @@ public class WarehouseKeeper extends MovableGridObject {
         Crate crate = getCrateInDirection(direction);
         boolean pushed = false;
 
-        int pushed_status = 1;
+        int pushed_status = MOVE_PUSHED;
 
         if (crate != null) {
             boolean wasOnDiamond = crate.isOnDiamond();
             pushed = push(crate, direction);
 
             if (!pushed)
-                return -1;
+                return MOVE_FAILED;
 
             // If the crate has changed the onDiamond status
-            if (wasOnDiamond != crate.isOnDiamond()) pushed_status = wasOnDiamond ? 3 : 2;
+            if (wasOnDiamond != crate.isOnDiamond())
+                pushed_status = wasOnDiamond ? MOVE_PUSHED_OFF_DIAMOND : MOVE_PUSHED_ON_DIAMOND;
         }
 
         if (move(direction)) {
-            return pushed ? pushed_status : 0;
+            return pushed ? pushed_status : MOVE_NOT_PUSHED;
         }
 
         return -1;
