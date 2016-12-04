@@ -38,19 +38,19 @@ public class SokochanGridTest {
         assertSame("Out of bound tile", null, grid.getGridObject(5, 5));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = NullPointerException.class)
     public void addOutOfBound1() throws Exception {
         SokochanGrid grid = new SokochanGrid(5, 5);
         Crate crate2 = new Crate(grid, new Point(-1, -1));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = NullPointerException.class)
     public void addOutOfBound2() throws Exception {
         SokochanGrid grid = new SokochanGrid(5, 5);
         Crate crate2 = new Crate(grid, new Point(5, 5));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = NullPointerException.class)
     public void addOutOfBound3() throws Exception {
         SokochanGrid grid = new SokochanGrid(5, 5);
         Crate crate2 = new Crate(grid, new Point(100, 100));
