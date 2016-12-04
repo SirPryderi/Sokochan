@@ -140,30 +140,35 @@ public final class SokochanEngine {
 
         while (i.hasNext()) {
             char c = i.next();
-            c = Character.toLowerCase(c);
 
-            switch (c) {
-                case 'w':
+            Letters letter = Letters.valueOf(c);
+
+            if (letter == null) {
+                // TODO throw a more accurate exception
+                throw new RuntimeException("Invalid letter '" + c + "' provided.");
+            }
+
+            switch (letter) {
+                case WALL:
                     new Wall(sokochanGrid, i.getPosition());
                     break;
-                case 'c':
-                    if (new Crate(sokochanGrid, i.getPosition()).isOnDiamond())
-                        cratesOnDiamondCount++;
+                case CRATE:
+                    new Crate(sokochanGrid, i.getPosition());
                     cratesCount++;
                     break;
-                case 's':
+                case WAREHOUSE_KEEPER:
                     warehouseKeeper = new WarehouseKeeper(sokochanGrid, i.getPosition());
                     break;
-                case 'd':
+                case DIAMOND:
                     new Diamond(sokochanGrid, i.getPosition());
                     break;
-                case 'p': // Crate on  Diamond
+                case CRATE_ON_DIAMOND: // Crate on  Diamond
                     new Diamond(sokochanGrid, i.getPosition());
                     if (new Crate(sokochanGrid, i.getPosition()).isOnDiamond())
                         cratesOnDiamondCount++;
                     cratesCount++;
                     break;
-                case 'r': // WarehouseKeeper on Diamond
+                case WAREHOUSE_KEEPER_ON_DIAMOND: // WarehouseKeeper on Diamond
                     new Diamond(sokochanGrid, i.getPosition());
                     warehouseKeeper = new WarehouseKeeper(sokochanGrid, i.getPosition());
             }

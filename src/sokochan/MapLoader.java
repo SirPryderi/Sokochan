@@ -149,21 +149,21 @@ public final class MapLoader {
             MovableGridObject content = tileGridObject.getPlacedObject();
 
             if (tileGridObject instanceof Wall)
-                builder.append('w');
+                builder.append(Letters.WALL.getCode());
             else if (tileGridObject instanceof Diamond) {
                 if (content == null)
-                    builder.append('d');
+                    builder.append(Letters.DIAMOND.getCode());
                 else if (content instanceof Crate)
-                    builder.append('p');
+                    builder.append(Letters.CRATE_ON_DIAMOND.getCode());
                 else if (content instanceof WarehouseKeeper)
-                    builder.append('r');
+                    builder.append(Letters.WAREHOUSE_KEEPER_ON_DIAMOND.getCode());
             } else {
                 if (content == null)
-                    builder.append(' ');
+                    builder.append(Letters.TILE.getCode());
                 else if (content instanceof Crate)
-                    builder.append('c');
+                    builder.append(Letters.CRATE.getCode());
                 else if (content instanceof WarehouseKeeper)
-                    builder.append('s');
+                    builder.append(Letters.WAREHOUSE_KEEPER.getCode());
             }
 
             // If it's the last in the row, send a new line
