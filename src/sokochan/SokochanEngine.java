@@ -205,8 +205,7 @@ public final class SokochanEngine {
             } else if (status == WarehouseKeeper.MOVE_PUSHED_OFF_DIAMOND) {
                 cratesOnDiamondCount--;
             }
-        } else if (status == WarehouseKeeper.MOVE_FAILED) {
-            pushed = false;
+        } else if (status == WarehouseKeeper.MOVE_NOT_PUSHED) {
             moved = true;
         }
 
