@@ -99,7 +99,6 @@ public class Main extends Application {
             showErrorDialog("Index out of bound. Irregular grid provided.", e.getMessage());
         } catch (MapLoader.MapLoaderException e) {
             showErrorDialog("Error while parsing the save file.", e.getMessage());
-            showExceptionDialog(e);
         } catch (Exception e) {
             showExceptionDialog(e);
         }
