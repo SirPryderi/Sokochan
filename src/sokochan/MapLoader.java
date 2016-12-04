@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * Loads levels from a *.skb file and provides them to the {@link SokochanEngine}
  * Created by Vittorio on 25-Oct-16.
  */
-public final class MapLoader {
+final class MapLoader {
     private final List<Level> levels;
     private String name;
     private Level inProgressLevel;
@@ -25,7 +25,7 @@ public final class MapLoader {
     /**
      * Default constructor for the MapLoader
      */
-    public MapLoader() {
+    MapLoader() {
         levels = new ArrayList<>();
     }
 
@@ -186,14 +186,14 @@ public final class MapLoader {
     /**
      * @return the name of the map as specified in the save file
      */
-    public String getName() {
+    String getName() {
         return name;
     }
 
     /**
      * @param name sets the name of the map
      */
-    private void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
