@@ -1,5 +1,4 @@
 MapSetName: Example Game!
-LevelName: Simple Start
 WWWWWWWWWWWWWWWWWWWW
 W    W             W 
 W C  W D           W 
@@ -108,3 +107,25 @@ W  w      cdw      W
 W          c       W
 Wwww  wwwww    wwwwW
 WWWWWWWWWWWWWWWWWWWW
+
+LevelName: Hardcore
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W    WWW  WWWWWWWWWWWWWWWWWWWWWWWWWW   W
+W                  WWwwd       d      DW
+W    WWWW WWWWWWWW WWwwww wcwwwww ww  ww
+W   CC    WWWWWWWW WWwwww  c wwww www wW
+W   CDD                   w  wwww   w wW
+WWWWWDWWWWWWWWWW   WW wwwww wwwww w w wW
+W                  WW wwwww       w wcwW
+W WWW W         W  WW wwwww wwwww w  c W
+W W   W     W   W  WWd            w    W
+W    WW     W   W  WWwwww   w www wwwwwW
+WW   WW     W      WWwdww   wdwww      W
+WW   WW     W         c       wwwwwwww W
+WW   WW     W      WW cwwwwww wwwwww   W
+WW   WW     W      WW                wwW
+WW   WW     W      WWw               wdW
+WW WWWW     W      WW  w      cdw      W
+W           W   SC WW          c       W
+W   WWW           DWWwww  wwwww    wwwwW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW

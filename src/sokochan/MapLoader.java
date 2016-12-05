@@ -1,5 +1,6 @@
 package sokochan;
 
+import javafx.util.Pair;
 import sokochan.GridObjects.*;
 
 import java.awt.*;
@@ -9,13 +10,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
  * Loads levels from a *.skb file and provides them to the {@link SokochanEngine}
  * Created by Vittorio on 25-Oct-16.
  */
-final class MapLoader {
+public final class MapLoader {
     private final List<Level> levels;
     private String name;
     private Level inProgressLevel;
@@ -73,25 +76,48 @@ final class MapLoader {
 
         boolean isInProgressLevel = false;
 
+        if (!i.hasNext()) {
+            throw new MapLoaderException("The file seems to be empty");
+        }
+
+        //region Set Name
+        Pair<String, String> namePair = parseKeyValue(i.next());
+
+        if (namePair == null || !namePair.getKey().equals("MapSetName") || namePair.getKey().isEmpty()) {
+            throw new MapLoaderException("Name should be specified in the first line of the file");
+        }
+
+        setName(namePair.getValue());
+        //endregion
+
         // I think I have no clue of what is happening here anymore
         // Just the result of poor planning, I guess. I hope you like spaghetti.
+        // It works, so I shouldn't edit this too much.
         while (i.hasNext()) {
-            String s = i.next();
+            String s = i.next().trim();
 
-            if (s.contains("MapSetName: ")) {
-                setName(s.replace("MapSetName: ", ""));
-            } else if (s.contains("LevelName: ")) {
-                String name = s.replace("LevelName: ", "");
-                levels.add(new Level(name));
-            } else if (s.contains("CurrentLevel: ")) {
-                try {
-                    inProgressLevelIndex = Integer.valueOf(s.replace("CurrentLevel: ", ""));
-                    isInProgressLevel = true;
-                    inProgressLevel = new Level(levels.get(inProgressLevelIndex).getName());
-                } catch (NumberFormatException e) {
-                    throw new MapLoaderException("Invalid in progress index provided");
+            Pair<String, String> pair = parseKeyValue(s);
+
+            if (pair != null) { // it a like with something like "abc: abcd"
+                switch (pair.getKey()) {
+                    case "LevelName":
+                        levels.add(new Level(pair.getValue()));
+                        break;
+                    case "CurrentLevel":
+                        try {
+                            inProgressLevelIndex = Integer.valueOf(pair.getValue());
+                            isInProgressLevel = true;
+                            inProgressLevel = new Level(levels.get(inProgressLevelIndex).getName());
+                        } catch (NumberFormatException e) {
+                            throw new MapLoaderException("Invalid in progress index provided");
+                        }
+                        break;
+                    default:
+                        throw new MapLoaderException("Invalid key: value found.");
                 }
-            } else if (!s.isEmpty()) {
+            } else if (!s.isEmpty()) { // It's some other kind of line
+                validateMapLine(s);
+
                 Level level;
 
                 if (isInProgressLevel) {
@@ -107,10 +133,49 @@ final class MapLoader {
 
                 if (level != null)
                     level.content.add(s);
+                else
+                    throw new MapLoaderException("No level declared!");
             }
         }
 
         mapLoaded = true;
+    }
+
+    /**
+     * Parses something like "MapSetName: Name" into a {@link Pair} containing the two values
+     *
+     * @param string the string to parse
+     * @return (Key, Value)
+     */
+    private Pair<String, String> parseKeyValue(String string) {
+        Pattern p = Pattern.compile("^([a-zA-Z0-9]+):\\s?(.*)");
+        Matcher m = p.matcher(string);
+
+        if (!m.matches()) {
+            return null;
+        }
+
+        return new Pair<>(m.group(1), m.group(2));
+    }
+
+    /**
+     * Check if the line is valid
+     *
+     * @param line to validate
+     * @throws MapLoaderException if the line is invalid
+     */
+    private void validateMapLine(String line) throws MapLoaderException {
+        line = line.toLowerCase();
+
+        char[] chars = line.toCharArray();
+
+        for (char c : chars) {
+            if (Letters.valueOf(c) == null)
+                throw new MapLoaderException("Invalid character '" + c + "' provided");
+        }
+
+        if (chars[0] != Letters.WALL.getCode() || chars[chars.length - 1] != Letters.WALL.getCode())
+            throw new MapLoaderException("Walls should be on the edge of the map");
     }
 
     /**
