@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import sokochan.Direction;
 import sokochan.GridObjects.*;
@@ -399,8 +400,11 @@ public class Main extends Application {
             addIcon(dialog);
             dialog.setTitle("Tile size");
             dialog.setHeaderText("Set the tile size");
+
             if (error)
                 dialog.setContentText("Invalid input provided\n");
+            else
+                dialog.setContentText("");
 
             Optional<String> result = dialog.showAndWait();
 
@@ -408,12 +412,31 @@ public class Main extends Application {
                 result.ifPresent(value -> setRectangleSize(Integer.valueOf(value)));
 
                 error = false;
+            } catch (IllegalArgumentException e) {
+                showErrorDialog("Tile size too big", "The specified size is too big to fit on screen. Please, select a size smaller than " + (getScreenSmallerBound() + 1) + ".");
+                error = true;
+
             } catch (Exception e) {
                 error = true;
             }
         } while (error);
 
         draw();
+    }
+
+    private int getScreenSmallerBound() {
+        Screen screen = Screen.getPrimary();
+
+        int width = (int) screen.getBounds().getWidth();
+        int height = (int) screen.getBounds().getHeight();
+
+        int margin = 50;
+
+        if (width > height)
+            return (height - margin) / engine.getSokochanGrid().Y_SIZE;
+
+        else
+            return (width - margin) / engine.getSokochanGrid().X_SIZE;
     }
 
     /**
@@ -521,7 +544,10 @@ public class Main extends Application {
     }
 
     private void setRectangleSize(int rectangleSize) {
-        this.rectangleSize = rectangleSize;
+        if (rectangleSize <= getScreenSmallerBound()) {
+            this.rectangleSize = rectangleSize;
+        } else
+            throw new IllegalArgumentException("The rectangle size must be smaller than " + getScreenSmallerBound() + " to fit on screen.");
     }
     //</editor-fold>
 }
