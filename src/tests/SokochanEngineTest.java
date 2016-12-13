@@ -179,11 +179,11 @@ public class SokochanEngineTest {
     public void getLevelsCount() throws Exception {
         SokochanEngine engine = new SokochanEngine();
 
-        assertEquals("Levels in the default map", 6, engine.getLevelsCount());
+        assertEquals("Levels in the default map", 5, engine.getLevelsCount());
 
         engine = new SokochanEngine(new File("src/tests/testlevels/test3.skb"));
 
-        assertEquals("Levels in the default map with a game in progress", 6, engine.getLevelsCount());
+        assertEquals("Levels in the default map with a game in progress", 5, engine.getLevelsCount());
 
         engine = new SokochanEngine(new File("src/tests/testlevels/test1.skb"));
 
