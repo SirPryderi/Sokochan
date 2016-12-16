@@ -29,6 +29,7 @@
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+R" onAction="#resetLevel" text="Reset Level"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+H" onAction="#showHelp" text="Help…"/>
             <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About…"/>
         </Menu>
     </MenuBar>

@@ -4,15 +4,19 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -385,6 +389,88 @@ public class Main extends Application {
                 engine.getPushesCount()
                 )
         );
+
+        alert.showAndWait();
+    }
+
+    /**
+     * Opens a dialog showing the rules of the game
+     */
+    public void showHelp() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        addIcon(alert);
+        alert.setTitle("Help");
+        alert.setHeaderText("Help");
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        //<editor-fold desc="Help">
+        Label text = new Label("The game is played on a board of squares, where each square is a floor or a wall. Some floor squares contain boxes, and some floor squares are marked as storage locations.\n" +
+                "\n" +
+                "The player is confined to the board, and may move horizontally or vertically onto empty squares (never through walls or boxes). The player can also move into a box, which pushes it into the square beyond. Boxes may not be pushed into other boxes or walls, and they cannot be pulled. The puzzle is solved when all boxes are at storage locations.");
+        //</editor-fold>
+
+        GridPane pane = new GridPane();
+
+        // Crate
+        Rectangle crate = new Rectangle(40, 40);
+        crate.setFill(Color.ORANGE);
+
+        pane.add(crate, 0, 0);
+        pane.add(new Label("Crate"), 1, 0);
+
+        // Sokoban
+        Rectangle sokoban = new Rectangle(40, 40);
+        sokoban.setFill(Color.GREEN);
+
+        pane.add(sokoban, 0, 1);
+        pane.add(new Label("Warehouse Keeper"), 1, 1);
+
+        // Diamond
+        Rectangle diamond = new Rectangle(40, 40);
+        diamond.setFill(Color.RED);
+
+        pane.add(diamond, 0, 2);
+        pane.add(new Label("Diamond (storage location)"), 1, 2);
+
+//        pane.setAlignment(Pos.CENTER);
+
+        pane.setHgap(30);
+        pane.setVgap(10);
+        pane.setPadding(new Insets(20));
+
+//        pane.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
+
+        scrollPane.setContent(text);
+
+        scrollPane.setPrefSize(400D, 220D);
+
+//        scrollPane.setPrefWidth(400D);
+
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        scrollPane.setPadding(new Insets(20));
+
+
+        text.setWrapText(true);
+
+        text.setPrefWidth(350D);
+
+        text.setTextAlignment(TextAlignment.JUSTIFY);
+
+        text.setCursor(Cursor.TEXT);
+
+        text.setPadding(new Insets(20));
+
+        VBox hBox = new VBox();
+
+        hBox.getChildren().addAll(text, new Separator(), pane);
+
+        hBox.setFillWidth(true);
+
+//        hBox.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
+
+        alert.getDialogPane().setContent(hBox);
 
         alert.showAndWait();
     }
