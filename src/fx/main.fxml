@@ -19,9 +19,9 @@
         <Menu mnemonicParsing="false" text="Level" disable="true">
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+Z" onAction="#undo" text="Undo"
                       disable="true"/>
-            <MenuItem mnemonicParsing="false" accelerator="Shortcut+Shift+Z" onAction="#notImplemented" text="Redo"
-                      disable="true"/>
-            <SeparatorMenuItem/>
+            <!--<MenuItem mnemonicParsing="false" accelerator="Shortcut+Shift+Z" onAction="#notImplemented" text="Redo"-->
+            <!--disable="true"/>-->
+            <!--<SeparatorMenuItem/>-->
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+I" onAction="#showLevelInfo" text="Info…"/>
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+T" onAction="#setTileSize"
                       text="Change tile size…"/>
