@@ -1,3 +1,9 @@
+<!--
+  Title: Sokochan
+  Description: A Java 8 and JavaFX implementation of the Japanese Puzzle Sokoban.
+  Author: Vittorio Iocolano aka SirPryderi
+  -->
+
 # Sokochan
 A Java 8 and JavaFX implementation of the Japanese Puzzle Sokoban. We all love old games, don't we?
 
