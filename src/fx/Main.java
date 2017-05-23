@@ -483,7 +483,7 @@ public class Main extends Application {
      * Opens the dialog to change the size of the grid elements
      */
     public void setTileSize() {
-        boolean error = false;
+        boolean error = true;
 
         do {
             TextInputDialog dialog = new TextInputDialog(String.valueOf(getRectangleSize()));
@@ -491,6 +491,7 @@ public class Main extends Application {
             dialog.setTitle("Tile size");
             dialog.setHeaderText("Set the tile size");
 
+            //noinspection ConstantConditions
             if (error)
                 dialog.setContentText("Invalid input provided\n");
             else
@@ -500,14 +501,13 @@ public class Main extends Application {
 
             try {
                 result.ifPresent(value -> setRectangleSize(Integer.valueOf(value)));
-
                 error = false;
+            } catch (NumberFormatException e) { // FIX FOR TEST 14
+                showErrorDialog("Invalid Input", "Tile size must be a number.");
             } catch (IllegalArgumentException e) {
                 showErrorDialog("Invalid Input", e.getMessage());
-                error = true;
-
             } catch (Exception e) {
-                error = true;
+                showExceptionDialog(e);
             }
         } while (error);
 
