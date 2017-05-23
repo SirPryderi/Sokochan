@@ -115,7 +115,11 @@ public class Main extends Application {
     private void initGame() {
         draw();
         bindEvents();
-        menu.getMenus().get(1).setDisable(false);
+
+        // FIX FOR TEST 1
+        menu.getMenus().get(1).setDisable(false); // Enable "level" menu
+        menu.getMenus().get(0).getItems().get(0).setDisable(false); // Enable "save" menu item
+
         setUndoStatus();
     }
 

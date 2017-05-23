@@ -11,7 +11,8 @@
 
     <MenuBar GridPane.rowIndex="0" fx:id="menu">
         <Menu mnemonicParsing="false" text="File">
-            <MenuItem mnemonicParsing="false" accelerator="Shortcut+S" onAction="#saveGameFile" text="Save…"/>
+            <MenuItem mnemonicParsing="false" accelerator="Shortcut+S" onAction="#saveGameFile" text="Save…"
+                      disable="true"/>
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+L" onAction="#loadGameFile" text="Load…"/>
             <SeparatorMenuItem/>
             <MenuItem mnemonicParsing="false" accelerator="Shortcut+Q" onAction="#closeGame" text="Quit"/>
