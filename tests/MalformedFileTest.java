@@ -16,28 +16,28 @@ public class MalformedFileTest {
 
     @Test(expected = NoSuchFileException.class)
     public void absentMap() throws Exception {
-        new SokochanEngine(new File("src/tests/testlevels/nonexistent.skb"));
+        new SokochanEngine(new File("tests/testlevels/nonexistent.skb"));
     }
 
     @Test(expected = MapLoader.MapLoaderException.class)
     public void malformedLevel1() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test4.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test4.skb"));
         System.out.println(engine.getMapName());
     }
 
     @Test(expected = MapLoader.MapLoaderException.class)
     public void malformedLevel2() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test5.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test5.skb"));
     }
 
     @Test(expected = MapLoader.MapLoaderException.class)
     public void malformedLevel3() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test6.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test6.skb"));
     }
 
     @Test(expected = MapLoader.MapLoaderException.class)
     public void malformedLevel4() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test7.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test7.skb"));
     }
 
 }

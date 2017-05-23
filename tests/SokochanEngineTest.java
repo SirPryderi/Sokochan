@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 public class SokochanEngineTest {
     @Test
     public void getCratesOnDiamondCount() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test1.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test1.skb"));
 
         assertEquals("Initial crate count", 3, engine.getCratesOnDiamondCount());
 
@@ -55,7 +55,7 @@ public class SokochanEngineTest {
 
     @Test
     public void saveGame() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test1.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test1.skb"));
 
         engine.movePlayer(Direction.WEST);
         engine.movePlayer(Direction.SOUTH);
@@ -64,7 +64,7 @@ public class SokochanEngineTest {
         engine.movePlayer(Direction.SOUTH);
         engine.movePlayer(Direction.WEST);
 
-        File file = new File("src/tests/testlevels/savetest.skb");
+        File file = new File("tests/testlevels/savetest.skb");
 
         engine.saveGame(file);
 
@@ -103,14 +103,14 @@ public class SokochanEngineTest {
 
     @Test
     public void getSokochanGrid() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test1.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test1.skb"));
 
         assertNotNull(engine.getSokochanGrid());
     }
 
     @Test
     public void isComplete() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test2.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test2.skb"));
         engine.movePlayer(Direction.WEST);
 
         assertEquals("Level complete", true, engine.isComplete());
@@ -139,7 +139,7 @@ public class SokochanEngineTest {
 
     @Test
     public void getPushesCount() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test2.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test2.skb"));
 
         engine.movePlayer(Direction.WEST);
         engine.movePlayer(Direction.WEST);
@@ -181,11 +181,11 @@ public class SokochanEngineTest {
 
         assertEquals("Levels in the default map", 6, engine.getLevelsCount());
 
-        engine = new SokochanEngine(new File("src/tests/testlevels/test3.skb"));
+        engine = new SokochanEngine(new File("tests/testlevels/test3.skb"));
 
         assertEquals("Levels in the default map with a game in progress", 5, engine.getLevelsCount());
 
-        engine = new SokochanEngine(new File("src/tests/testlevels/test1.skb"));
+        engine = new SokochanEngine(new File("tests/testlevels/test1.skb"));
 
         assertEquals("Levels in test1.skb", 1, engine.getLevelsCount());
     }
@@ -196,7 +196,7 @@ public class SokochanEngineTest {
 
         assertEquals("Crates in default level", 1, engine.getCratesCount());
 
-        engine = new SokochanEngine(new File("src/tests/testlevels/test1.skb"));
+        engine = new SokochanEngine(new File("tests/testlevels/test1.skb"));
 
         assertEquals("Crates in test1.sbk", 4, engine.getCratesCount());
     }
@@ -207,14 +207,14 @@ public class SokochanEngineTest {
 
         assertEquals("Default map name", "Example Game!", engine.getMapName());
 
-        engine = new SokochanEngine(new File("src/tests/testlevels/test1.skb"));
+        engine = new SokochanEngine(new File("tests/testlevels/test1.skb"));
 
         assertEquals("Default map name", "test 1", engine.getMapName());
     }
 
     @Test
     public void getHistoryElementsCount() throws Exception {
-        SokochanEngine engine = new SokochanEngine(new File("src/tests/testlevels/test2.skb"));
+        SokochanEngine engine = new SokochanEngine(new File("tests/testlevels/test2.skb"));
 
         // Moving towards wall
         engine.movePlayer(Direction.NORTH);
