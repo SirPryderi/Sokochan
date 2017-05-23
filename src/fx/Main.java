@@ -503,7 +503,7 @@ public class Main extends Application {
 
                 error = false;
             } catch (IllegalArgumentException e) {
-                showErrorDialog("Tile size too big", "The specified size is too big to fit on screen. Please, select a size smaller than " + (getScreenSmallerBound() + 1) + ".");
+                showErrorDialog("Invalid Input", e.getMessage());
                 error = true;
 
             } catch (Exception e) {
@@ -634,10 +634,14 @@ public class Main extends Application {
     }
 
     private void setRectangleSize(int rectangleSize) {
-        if (rectangleSize <= getScreenSmallerBound()) {
-            this.rectangleSize = rectangleSize;
-        } else
-            throw new IllegalArgumentException("The rectangle size must be smaller than " + getScreenSmallerBound() + " to fit on screen.");
+        // FIX FOR TEST 13-15
+        if (rectangleSize < 1)
+            throw new IllegalArgumentException("The minimum tile size is 1. Minimum recommended size is 10.");
+
+        if (rectangleSize > getScreenSmallerBound())
+            throw new IllegalArgumentException("The tile size must be smaller than " + (getScreenSmallerBound() + 1) + " to fit on screen.");
+
+        this.rectangleSize = rectangleSize;
     }
     //</editor-fold>
 }
